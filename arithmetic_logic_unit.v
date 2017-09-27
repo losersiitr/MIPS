@@ -24,175 +24,138 @@
 module arithmetic_logic_unit
 
 (
-    control,	//specifies the alu operation
+    control,	//specifies the alu operation to be performed
     operand0, 	//first operand
     operand1, 	//second operand
-    result, 	//alu result
-	overflow,	//overflow flag (underflow as well)
-    zero 		//zero flag
+    result, 	//alu result after the operation
+    overflow,	//overflow flag, also the underflow flag
+    zero 	//zero flag
 );
 
-    //--------------------------
-	// Parameters
-	//--------------------------	
-	
-    //--------------------------
-	// Input Ports
-	//--------------------------
-	// < Enter Input Ports  >
-    input 		[3:0]	control;
-	input 		[31:0] 	operand0; 
-	input		[31:0]	operand1;
-	
-    //--------------------------
-    // Output Ports
-    //--------------------------
-    // < Enter Output Ports  >	
-    output 	[31:0] 	result; 
-	output			overflow;
-	output			zero;
-	
-    //--------------------------
-    // Bidirectional Ports
-    //--------------------------
-    // < Enter Bidirectional Ports in Alphabetical Order >
-    // None
-      
-    ///////////////////////////////////////////////////////////////////
-    // Begin Design
-    ///////////////////////////////////////////////////////////////////
-    //-------------------------------------------------
-    // Signal Declarations: local params
-    //-------------------------------------------------
    
-    //-------------------------------------------------
-    // Signal Declarations: reg
-    //------------------------------------------------- 
-    reg [31:0]	result;
-	reg 		overflow;
-	reg 		zero;
+    input [3:0]	 control;
+    input [31:0] operand0; 
+    input [31:0] operand1;
 	
-    //-------------------------------------------------
-    // Signal Declarations: wire
-    //-------------------------------------------------
-		
-	//---------------------------------------------------------------
-	// Instantiations
-	//---------------------------------------------------------------
-	// None
+   	
+    output [31:0] result; //this is the 32 bit result
+    output overflow;
+    output zero;
 
-	//---------------------------------------------------------------
-	// Combinatorial Logic
-	//---------------------------------------------------------------
+      
+   
+    reg [31:0] result;
+    reg overflow;
+    reg zero;
+	
+   
 	always @(control)
 	begin
 	
 		case (control)
-			4'b0000 : // AND
+			4'b0000 : // and 
 				begin
-					result 		= operand0 & operand1;
-					overflow 	= 0;
-					zero		= (result == 0) ? 1 : 0;
+					result = operand0 & operand1;
+					overflow = 0;
+					zero = (result == 0) ? 1 : 0;
 				end	
-			4'b0001: // OR
+			4'b0001: // or 
 				begin
-					result 		= operand0 | operand1;
-					overflow 	= 0;
-					zero		= (result == 0) ? 1 : 0;
+					result = operand0 | operand1;
+					overflow = 0;
+					zero = (result == 0) ? 1 : 0;
 				end	
-			4'b0010: // add
+			4'b0010: // add 
 				begin
-					result 		= operand0 + operand1;
-					overflow 	= 0;
-					zero		= (result == 0) ? 1 : 0;
+					result = operand0 + operand1;
+					overflow = 0;
+					zero = (result == 0) ? 1 : 0;
 				end
-			4'b0011: // XOR
+			4'b0011: // xor 
 				begin
-					result 		= operand0 ^ operand1;
-					overflow 	= 0;
-					zero		= (result == 0) ? 1 : 0;
+					result = operand0 ^ operand1;
+					overflow = 0;
+					zero = (result == 0) ? 1 : 0;
 				end
-			4'b0100: // NOR
+			4'b0100: // nor 
 				begin
-					result 		= ~(operand0 | operand1);
-					overflow 	= 0;
-					zero		= (result == 0) ? 1 : 0;
+					result = ~(operand0 | operand1);
+					overflow = 0;
+					zero = (result == 0) ? 1 : 0;
 				end
-			4'b0110: // Subtract
+			4'b0110: // subtract 
 				begin
-					result 		= operand0 - operand1;
-					overflow 	= 0;
-					zero		= (result == 0) ? 1 : 0;
+					result = operand0 - operand1;
+					overflow = 0;
+					zero = (result == 0) ? 1 : 0;
 				end
-			4'b0111: // set on less than
+			4'b0111: // set on less than 
 				begin
-					result 		= (operand0 < operand1) ? -1 : 0;
-					overflow 	= 0;
-					zero		= (result == 0) ? 1 : 0;
+					result = (operand0 < operand1) ? -1 : 0;
+					overflow = 0;
+					zero = (result == 0) ? 1 : 0;
 				end
-			4'b1000: // shift left
+			4'b1000: // shift left logical 
 				begin
-					result 		= operand0 << operand1;
-					overflow 	= 0;
-					zero		= (result == 0) ? 1 : 0;
+					result = operand0 << operand1;
+					overflow = 0;
+					zero = (result == 0) ? 1 : 0;
 				end
-			4'b1001: // shift right
+			4'b1001: // shift right logical
 				begin
-					result 		= operand0 >> operand1;
-					overflow 	= 0;
-					zero		= (result == 0) ? 1 : 0;
+					result = operand0 >> operand1;
+					overflow = 0;
+					zero = (result == 0) ? 1 : 0;
 				end
-			4'b1010: // shift right arithmetic
-				begin
-					result 		= operand0 >>> operand1;
-					overflow 	= 0;
-					zero		= (result == 0) ? 1 : 0;
-				end
+		
+				
 			4'b1011: // Signed add
 				begin
-					result 		= operand0 + operand1;
+					result = operand0 + operand1;
+					//This will check for overflow condition
 					
-					// See page 226 in Computer Organization and Design
-					if ((operand0 >= 0 && operand1 >= 0 && result < 0) ||
-						(operand0 < 0 && operand1 < 0 && result >= 0)) begin
+					if ((operand0 >= 0 && operand1 >= 0 && result < 0) ||(operand0 < 0 && operand1 < 0 && result >= 0)) 
+					   begin
 						overflow = 1;
-					end else begin
-						overflow = 0;
-					end
+					   end 
+					else 
+					     begin
+						   overflow = 0;
+					     end
 					
-					zero		= (result == 0) ? 1 : 0;
+					zero = (result == 0) ? 1 : 0;
 					
-					//$display("**********************zero=%d  add=%b    %d+%d", zero, result, operand0, operand1);
-				end
+					
+			       end
 			4'b1100: // Signed subtract
 				begin
-					result 		= operand0 - operand1;
+					result = operand0 - operand1;
+					//This will check for overflow condition
 					
-					// See page 226 in Computer Organization and Design
-					if ((operand0 >= 0 && operand1 < 0 && result < 0) ||
-						(operand0 < 0 && operand1 >= 0 && result >= 0)) begin
+					if ((operand0 >= 0 && operand1 < 0 && result < 0)||(operand0 < 0 && operand1 >= 0 && result >= 0)) 
+					   begin
 						overflow = 1;
-					end else begin
+					   end 
+				        else 
+					    begin
 						overflow = 0;
-					end
+					    end
 					
-					zero		= (result == 0) ? 1 : 0;
+					zero = (result == 0) ? 1 : 0;
 					
-					//$display("**********************zero=%d        subtract=%b    %d-%d", zero, result, operand0, operand1);
+				
 				end
 			default:
 				begin
-					zero 		= 0;
-					overflow 	= 0;
+					zero = 0;
+					overflow = 0;
 				end				
 		endcase
 		
 	end
 
 	
-	//---------------------------------------------------------------
-	// Sequential Logic
-	//---------------------------------------------------------------
+	
     
  endmodule
 
