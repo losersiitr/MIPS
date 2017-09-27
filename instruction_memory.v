@@ -27,58 +27,25 @@ module instruction_memory
 	address,
 	instruction
 );
+        //input port
+	input [31:0] address;
+	
+        //output port
+        output [31:0] instruction;
 
-    //--------------------------
-	// Parameters
-	//--------------------------	
-	
-    //--------------------------
-	// Input Ports
-	//--------------------------
-	// < Enter Input Ports  >
-	input		[31:0]	address;
-	
-    //--------------------------
-    // Output Ports
-    //--------------------------
-    // < Enter Output Ports  >	
-    output 	[31:0] 	instruction;
-		
-    //--------------------------
-    // Bidirectional Ports
-    //--------------------------
-    // < Enter Bidirectional Ports in Alphabetical Order >
-    // None
       
-    ///////////////////////////////////////////////////////////////////
-    // Begin Design
-    ///////////////////////////////////////////////////////////////////
-    //-------------------------------------------------
-    // Signal Declarations: local params
-    //-------------------------------------------------
-   
-    //-------------------------------------------------
-    // Signal Declarations: reg
-    //-------------------------------------------------    
-    reg	[31:0] instruction_memory	[255:0];
+    //We have 256 (32 bit) locations where we can store the instructions which are to be executed and is given by instruction_memory
+    reg	[31:0] instruction_memory [255:0];
 	
-    //-------------------------------------------------
-    // Signal Declarations: wire
-    //-------------------------------------------------
-		
-	//---------------------------------------------------------------
-	// Instantiations
-	//---------------------------------------------------------------
-	// None
-
-	//---------------------------------------------------------------
-	// Combinatorial Logic
-	//---------------------------------------------------------------
+    //The readmh function reads the hexadecimal numbers from the file program.mips and maps them into instruction_memory
+    
 	initial
 	begin
 		$readmemh("program.mips",instruction_memory);
 	end
-	
+    
+    //The assign instruction, gives the variable instruction the data which is present in the instruction_memory at one location out of the possible 256. 
+    
 	assign instruction = instruction_memory[address[9:2]];
 	
  endmodule  
