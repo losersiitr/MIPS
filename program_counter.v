@@ -32,62 +32,22 @@ module program_counter
 	reg_address
 );
 
-    //--------------------------
-	// Parameters
-	//--------------------------	
-	
-    //--------------------------
-	// Input Ports
-	//--------------------------
-	// < Enter Input Ports  >
-	input						clk;
-	input						rst;
-	input				[2:0]	pc_control;
-	input				[25:0]	jump_address;
-	input				[15:0]	branch_offset;
-	input				[31:0] 	reg_address;
-	
-    //--------------------------
-    // Output Ports
-    //--------------------------
-    // < Enter Output Ports  >	
-    output 	reg	[31:0] 	pc;
-		
-    //--------------------------
-    // Bidirectional Ports
-    //--------------------------
-    // < Enter Bidirectional Ports in Alphabetical Order >
-    // None
-      
-    ///////////////////////////////////////////////////////////////////
-    // Begin Design
-    ///////////////////////////////////////////////////////////////////
-    //-------------------------------------------------
-    // Signal Declarations: local params
-    //-------------------------------------------------
    
-    //-------------------------------------------------
-    // Signal Declarations: reg
-    //-------------------------------------------------    
+	// Input Ports
 	
-    //-------------------------------------------------
-    // Signal Declarations: wire
-    //-------------------------------------------------
-	wire	[31:0]	pc_plus_4;
+	input clk;
+	input rst;
+	input [2:0] pc_control;
+	input [25:0] jump_address;
+	input [15:0] branch_offset;
+	input [31:0] reg_address;
 	
-	//---------------------------------------------------------------
-	// Instantiations
-	//---------------------------------------------------------------
-	// None
-
-	//---------------------------------------------------------------
+        // Output Ports
+        output reg [31:0] pc;      
+	wire [31:0] pc_plus_4;
 	// Combinatorial Logic
-	//---------------------------------------------------------------
 	assign pc_plus_4 = pc + 4;
-	
-	//---------------------------------------------------------------
 	// Sequential Logic
-	//---------------------------------------------------------------
     always @(posedge clk or posedge rst)
 	begin
 		if (rst)
